@@ -15,6 +15,9 @@ cd jwt_tool
 sudo docker run -it --network "host" --rm -v "${PWD}:/tmp" -v "${HOME}/.jwt_tool:/root/.jwt_tool" ticarpi/jwt_tool
 
 
+sudo docker run -it --network "host" --rm -v "${PWD}:/tmp" -v "${HOME}/.jwt_tool:/root/.jwt_tool" ticarpi/jwt_tool -h
+sudo docker run -it --network "host" --rm -v "${PWD}:/tmp" -v "${HOME}/.jwt_tool:/root/.jwt_tool" ticarpi/jwt_tool "eyJraWQiOiJlODUzYTE5Yy1iNDg3LTRiZTItODFhYS00YmYyOTlmNDNmZTciLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJwb3J0c3dpZ2dlciIsImV4cCI6MTczOTA2NTAyMywic3ViIjoid2llbmVyIn0.EfrU9OTSH0WMntFb39a7MPVc2a0_PlsBcG84wQqE_So"
+
 ```
 
 Dockerfile:
