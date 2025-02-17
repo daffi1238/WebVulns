@@ -35,6 +35,7 @@ whois -h whois.radb.net -- '-i origin AS57481' | grep -Eo "([0-9.]+){4}/[0-9]+"
 
 #### Discovering sub-domains
 **crt.sh**
+
 https://github.com/daffi1238/dotfile/blob/main/tools/crt.py
 ```bash
 python3 /home/kali/.local/bin/crt.py elcorteingles.es --unique
