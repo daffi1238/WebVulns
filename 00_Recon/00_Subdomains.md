@@ -37,6 +37,8 @@ whois -h whois.radb.net -- '-i origin AS57481' | grep -Eo "([0-9.]+){4}/[0-9]+"
 **crt.sh**
 
 https://github.com/daffi1238/dotfile/blob/main/tools/crt.py
+https://raw.githubusercontent.com/daffi1238/dotfile/refs/heads/main/tools/crt.py
+
 ```bash
 python3 /home/kali/.local/bin/crt.py elcorteingles.es --unique
 ```
@@ -97,9 +99,12 @@ gobuster dns -d logitravel.com -w /usr/share/wordlists/seclists/Discovery/DNS/su
 ```
 
 **FavFreak**
+
 https://github.com/devanshbatham/FavFreak -> No lo uso pero es una famosa referencia
-https://github.com/daffi1238/dotfile/blob/main/tools/get_favicon.py
-https://github.com/daffi1238/dotfile/blob/main/tools/hash_favicon.py
+
+https://raw.githubusercontent.com/daffi1238/dotfile/refs/heads/main/tools/get_favicon.py
+
+https://raw.githubusercontent.com/daffi1238/dotfile/refs/heads/main/tools/hash_favicon.py
 
 ```bash
 python3 get_favicon.py https://target.com
