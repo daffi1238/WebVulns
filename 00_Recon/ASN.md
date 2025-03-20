@@ -30,6 +30,7 @@ whois -h whois.radb.net -- '-i origin AS33905' | grep -Eo "([0-9.]+){4}/[0-9]+"
 ```
 
 # From a scope to identify infrastructure
+To identify others ASN that may be interesting.
 1. Get IP's for each domain identified
 2. clean duplicates
 ```bash
