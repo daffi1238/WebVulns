@@ -34,5 +34,5 @@ To identify others ASN that may be interesting.
 1. Get IP's for each domain identified
 2. clean duplicates
 ```bash
-cat ips.txt | xargs -I {} zsh -c 'sleep 1; curl -s "https://api.bgpview.io/ip/{}" | jq | tee bgpview.out'
+cat ips.txt | xargs -I {} zsh -c 'sleep 1; curl -s "https://api.bgpview.io/ip/{}" | jq | tee -a bgpview.out'
 ```
