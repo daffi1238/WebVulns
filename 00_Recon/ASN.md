@@ -1,10 +1,13 @@
 # From a Corportation to ASN listing
 1. Identify a web of the corporation and get its IP address
 ```bash
-ping -c 1 tesla.com | gripo | sort -u
+# get IP
+dig +short tesla.com
 
 curl https://api.hackertarget.com/aslookup/?q=2.18.53.207
 curl https://api.hackertarget.com/aslookup/?q=2.18.53.207 | awk '{print $4}' FS="," | tr -d '"'
+
+curl -s "https://api.bgpview.io/ip/{}" | jq | tee -a bgpview.out
 ```
 With the name of the AS use amass to identify the IP range used
 ```bash
@@ -35,4 +38,13 @@ To identify others ASN that may be interesting.
 2. clean duplicates
 ```bash
 cat ips.txt | xargs -I {} zsh -c 'sleep 1; curl -s "https://api.bgpview.io/ip/{}" | jq | tee -a bgpview.out'
+
+# get ASN's
+cat bgpview.out | grep -A1 "asn" | grep name | sort -u
+```
+
+
+Apply masscan to each ASN name discovered
+```bash
+cat bgpview.out | grep -A1 "asn" | grep name | sort -u | awk '{print $2}' FS=":" | tr -d ',' | sed 's/^/amass intel -org /g'
 ```
