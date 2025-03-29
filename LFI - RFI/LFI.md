@@ -1,3 +1,8 @@
+
+https://github.com/six2dez/pentest-book/blob/master/enumeration/web/lfi-rfi.md
+
+
+# LFI
 Wordlists:
 ```
 https://github.com/whiteknight7/wordlist/blob/main/fuzz-lfi-params-list.txt
@@ -30,3 +35,5 @@ cat * | sort -u > LFI.txt
 
 wfuzz -hc=404 -t 5 -w LFI.txt https://test.com/path/?file=FUZZ
 ```
+
+# RFI

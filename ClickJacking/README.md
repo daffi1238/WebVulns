@@ -1,0 +1,1 @@
+https://github.com/six2dez/pentest-book/blob/master/enumeration/web/clickjacking.md

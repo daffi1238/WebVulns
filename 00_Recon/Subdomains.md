@@ -45,10 +45,6 @@ subfinder -d $target -v | grep $target > subfinder.out
 ```
 
 **crt.sh**
-
-https://github.com/daffi1238/dotfile/blob/main/tools/crt.py
-https://raw.githubusercontent.com/daffi1238/dotfile/refs/heads/main/tools/crt.py
-
 ```bash
 wget -P /home/kali/.local/bin/ https://raw.githubusercontent.com/daffi1238/dotfile/refs/heads/main/tools/crt.py
 
@@ -60,16 +56,6 @@ python3 /home/kali/.local/bin/crt.py $target --unique | grep $target > crtpy.out
 ```bash
 dnsrecon -d apple.com -n 1.1.1.1 | tee dnsrecon.out
 ```
-
-
-**dnsX**
-```bash
-sudo apt install dnsx
-
-cat subfinder.out | dnsx -silent -a -resp
-
-```
-
 
 
 **Github**
@@ -102,6 +88,20 @@ shodan domain tesla.com
 ```bash
 target="tesla.com"
 amass enum -passive -d $target | tee amass.out
+```
+
+**assetfinder**
+```bash
+export PATH=$PATH:$HOME/go/bin 
+go install github.com/tomnomnom/assetfinder@latest
+assetfinder -subs-only elcorteingles.es
+cat subfinder.out  
+```
+
+**dnsX**
+```bash
+sudo apt install dnsx
+cat subfinder.out | dnsx -silent -a -resp
 ```
 
 
