@@ -2,15 +2,16 @@
 1. Identify a web of the corporation and get its IP address
 ```bash
 # get IP
-dig +short tesla.com
+dig +short paypal.com
 
-curl https://api.hackertarget.com/aslookup/?q=2.18.53.207
-curl https://api.hackertarget.com/aslookup/?q=2.18.53.207 | awk '{print $4}' FS="," | tr -d '"'
+curl -s https://api.bgpview.io/search?query_term=paypal | jq | tee -a bgpview.out
 
-curl -s "https://api.bgpview.io/ip/{}" | jq | tee -a bgpview.out
+curl -s "https://api.bgpview.io/ip/162.159.141.96" | jq | tee -a bgpview.out
 ```
+
 With the name of the AS use amass to identify the IP range used
 ```bash
+# amass
 amass intel -org "AKAMAI-AMS"
   ASN: 43639 - AKAMAI-AMS2
           2.16.55.0/24
@@ -23,6 +24,8 @@ amass intel -org "AKAMAI-AMS"
           23.7.244.0/24
           23.40.100.0/24
 
+# nmap
+nmap --script targets-asn --script-args targets-asn.asn=26444
 ```
 
 With the ASN's its easy get the range but we have it already with amass anyway, 
@@ -48,3 +51,13 @@ Apply masscan to each ASN name discovered
 ```bash
 cat bgpview.out | grep -A1 "asn" | grep name | sort -u | awk '{print $2}' FS=":" | tr -d ',' | sed 's/^/amass intel -org /g'
 ```
+
+
+# Massive scan
+**Fuzz**
+```bash
+for ipa in 98.13{6..9}.{0..255}.{0..255}; do
+        wget -t 1 -T 5 http://${ipa}/phpinfo.php;
+done &
+```
+

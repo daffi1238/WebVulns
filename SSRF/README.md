@@ -1,3 +1,5 @@
+https://github.com/six2dez/pentest-book/blob/master/enumeration/web/ssrf.md
+
 ## Wordlist
 - [ ] Test SSRF in each parameter with url's
 - [ ] Test SSRF in Referer header

