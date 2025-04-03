@@ -138,7 +138,11 @@ cat subfinder.out | dnsx -silent -a -resp
 - Escanear puertos
 - Aplicar httpx a cada ip-puerto identificado
 ```bash
-cat output.txt | grep tcp | awk ' {print $4,":",$3}' | tr -d ' ' | httpx -title -sc -cl
+go install -v github.com/projectdiscovery/httpx/cmd/httpx@latest
+export PATH=$PATH:$HOME/go/bin
+cat subdomains.txt | httpx -follow-redirects -random-agent -status-code -silent -retries 2 -title -web-server -tech-detect -location -no-color -o websites.txt
+
+#cat output.txt | grep tcp | awk ' {print $4,":",$3}' | tr -d ' ' | httpx -title -sc -cl
 ```
 
 
