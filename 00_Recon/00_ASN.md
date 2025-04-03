@@ -35,6 +35,7 @@ https://bgp.he.net/
 whois -h whois.radb.net -- '-i origin AS33905' | grep -Eo "([0-9.]+){4}/[0-9]+"
 ```
 
+
 # From a scope to identify infrastructure
 To identify others ASN that may be interesting.
 1. Get IP's for each domain identified
@@ -50,6 +51,11 @@ cat bgpview.out | grep -A1 "asn" | grep name | sort -u
 Apply masscan to each ASN name discovered
 ```bash
 cat bgpview.out | grep -A1 "asn" | grep name | sort -u | awk '{print $2}' FS=":" | tr -d ',' | sed 's/^/amass intel -org /g'
+```
+
+Once IP scope is define:
+```bash
+nmap -sT -Pn -T2 -n --top-ports=10 -iL IPs_v4.txt -oA IPs_v4_topports10.txt -v --open
 ```
 
 
