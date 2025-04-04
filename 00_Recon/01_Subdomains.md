@@ -149,6 +149,28 @@ cat subdomains.txt | httpx -follow-redirects -random-agent -status-code -silent 
 #cat output.txt | grep tcp | awk ' {print $4,":",$3}' | tr -d ' ' | httpx -title -sc -cl
 ```
 
+## Active subdomain enumeration
+
+#### Subdomain Enumeration DNS Bruteforce
+```
+# DNS Server Validator
+git clone https://github.com/vortexau/dnsvalidator
+cd dnsvalidator
+pip install setuptools
+python3 setup.py install
+
+dnsvalidator -tL https://public-dns.info/nameservers.txt -threads 100 -o resolvers.txt
+
+# ShuffleDNS
+go install -v github.com/projectdiscovery/shuffledns/cmd/shuffledns@latest
+export PATH=$PATH:$HOME/go/bin
+shuffledns -d paypal.com -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-5000.txt -r ~/repos/dnsvalidator/resolvers.txt
+
+# subbrute
+git clone https://github.com/TheRook/subbrute
+cd subbrute
+python3 subbrute.py /usr/share/seclists/Discovery/DNS paypal.com | massdns -r /home/kali/repos/dnsvalidator/resolvers.txt -o S -w output.txt
+```
 
 #### Brute Forcing
 https://github.com/danielmiessler/SecLists/tree/master/Discovery/DNS
