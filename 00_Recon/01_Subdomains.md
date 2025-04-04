@@ -1,6 +1,10 @@
 https://github.com/six2dez/pentest-book/tree/master/recon/subdomain-enum
 
 # Recognition
+To start this process is neccesary a files with the domains and subdomains identified previously in the ASN chapter.
+
+For this is foundamental limit the scope to the domains and avoid subdomains. If the corporation have several subsidiaries maybe each one may have 3 or 2 main domains.
+
 
 ## Getting ready
 ```bash
@@ -35,7 +39,7 @@ https://mxtoolbox.com/Whois.aspx
 ## Reconftw
 ```bash
 target=tesla.com
-sudo docker run -it --rm -v "${PWD}/OutputFolder/":'/reconftw/Recon/' six2dez/reconftw:main -d $tesla -s 
+sudo docker run -it --rm -v "${PWD}/OutputFolder/":'/reconftw/Recon/' six2dez/reconftw:main -d $target -s 
 ```
 
 
@@ -286,3 +290,9 @@ Actualizar con el framework de la database!
 
 
 
+
+
+
+
+# Conclusions
+From here process we should have a file with all the subdomains identified. We would expand the first subdomain scope. 

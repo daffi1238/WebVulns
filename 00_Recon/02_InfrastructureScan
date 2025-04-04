@@ -1,0 +1,10 @@
+# Infrastructure Scan
+1. We're going to try answer here IP's UP, webapps available and other services, but mainly web
+
+
+https://github.com/six2dez/pentest-book/blob/master/recon/host-scanning.md
+
+
+```
+nmap -sT -Pn -n -T2 -iL ips.txt -oN allPorts.nmap
+ ```

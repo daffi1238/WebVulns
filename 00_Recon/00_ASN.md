@@ -1,4 +1,5 @@
-# From a Corportation to ASN listing
+# Annalysis
+## From a Corportation to ASN listing
 1. Identify a web of the corporation and get its IP address
 ```bash
 # get IP
@@ -26,6 +27,9 @@ amass intel -org "AKAMAI-AMS"
 
 # nmap
 nmap --script targets-asn --script-args targets-asn.asn=26444
+
+# scan de ip ranges
+nmap -sT -Pn -T2 -n --top-ports=10 -iL IPs_v4.txt -oA IPs_v4_topports10.txt -v --open
 ```
 
 With the ASN's its easy get the range but we have it already with amass anyway, 
@@ -35,7 +39,9 @@ https://bgp.he.net/
 whois -h whois.radb.net -- '-i origin AS33905' | grep -Eo "([0-9.]+){4}/[0-9]+"
 ```
 
-2. Annalyze domains and subdomains with reverse resolution
+2. Reverse IP lookup using rapiddns!
+Check the custom script here: [rapiddns.sh](./rapiddns.sh)
+
 ```bash
 mkdir rapiddns
 #!/bin/zsh
@@ -66,7 +72,7 @@ while IFS= read -r line; do
     AS=$(echo $line | awk '{print $1}' FS="/")
 
     # Process and extract relevant data from the downloaded pages
-    cat rapiddns* | grep -E "scope|td" | grep -A1 scope | grep td | tr -d "</>" | xargs | tr " " "\n" | sed 's/^td//g' | sed 's/td$//g' | tee $AS
+    cat rapiddns* | grep -E "scope|td" | grep -A1 scope | grep td | tr -d "</>" | xargs | tr " " "\n" | sed 's/^td//g' | sed 's/td$//g' | tee $AS               
     echo "✅ Processing of $line completed."
 
     # Remove temporary files
@@ -76,7 +82,18 @@ done < "$INPUT_FILE"
 ```
 With this are identified several domains and subdomains!
 
-# From a scope to identify infrastructure
+3. Manual Reverse IP lookup
+```
+nmap -sn -iL ASNs.txt -oN IPs.txt
+cat IPs.txt | gripo | sort -u | tee IPs.txt
+
+Por completar aun!
+```
+
+El resultado de este proceso deberá ser un fichero con todos los dominios identificados y otro con todas las IP's identificadas como up.
+
+
+## From a scope to identify infrastructure
 To identify others ASN that may be interesting.
 1. Get IP's for each domain identified
 2. clean duplicates
@@ -93,10 +110,7 @@ Apply masscan to each ASN name discovered
 cat bgpview.out | grep -A1 "asn" | grep name | sort -u | awk '{print $2}' FS=":" | tr -d ',' | sed 's/^/amass intel -org /g'
 ```
 
-Once IP scope is define:
-```bash
-nmap -sT -Pn -T2 -n --top-ports=10 -iL IPs_v4.txt -oA IPs_v4_topports10.txt -v --open
-```
+
 
 
 # Massive scan
@@ -107,3 +121,7 @@ for ipa in 98.13{6..9}.{0..255}.{0..255}; do
 done &
 ```
 
+
+
+# Diving Deeper
+One a good scope is defined let's annalyze the subdomains to expand it even more!
