@@ -1,4 +1,8 @@
 # Annalysis
+```
+source ~/enum_venv/bin/activate
+```
+
 ## From a Corportation to ASN listing
 1. Identify a web of the corporation and get its IP address
 ```bash
@@ -83,11 +87,18 @@ done < "$INPUT_FILE"
 With this are identified several domains and subdomains!
 
 3. Manual Reverse IP lookup
-```
-nmap -sn -iL ASNs.txt -oN IPs.txt
-cat IPs.txt | gripo | sort -u | tee IPs.txt
+```bash
+git clone https://github.com/vortexau/dnsvalidator
+cd dnsvalidator
+pip install setuptools
+python3 setup.py install
 
-Por completar aun!
+dnsvalidator -tL https://public-dns.info/nameservers.txt -threads 100 -o resolvers.txt
+
+# Now with the dns servers identified:
+cat ASNs.txt| xargs -I {} prips {} >> ips_asn.txt
+
+dig +short
 ```
 
 El resultado de este proceso deberá ser un fichero con todos los dominios identificados y otro con todas las IP's identificadas como up.
