@@ -45,26 +45,8 @@ sudo docker run -it --rm -v "${PWD}/OutputFolder/":'/reconftw/Recon/' six2dez/re
 
 ## Discovering sub-domains
 **Reverse IP Lookup to IP Range**
-```bash
-mkdir rapiddns
-curl -s "https://rapiddns.io/sameip/64.4.250.0/24?full=1#result" > rapiddns.out
-curl -s "https://rapiddns.io/sameip/64.4.250.0/24?page=2" > rapiddns2.out
+[rapiddns.sh](./scripts/rapiddns.sh)
 
-
-nTotal=$(cat rapiddns.out| grep -oP 'Total.*' | awk '{print $2}' FS=";" | grep -oP ">.*?</" | tr -d '<>/')
-
-# page to repeat request to rapiddns
-echo "$((($nTotal / 100) + 1))"
-
-for file in rapiddns*; do
-  awk '/<table/,/<\/table>/' "$file" > "./${file%.out}_table.html"
-done
-
-firefox /tmp/*_table.html
-
-# get all domains
-cat rapiddns2_table.html | grep -E "scope|td" | grep -A1 scope | grep td | tr -d "</>" | xargs | tr " " "\n"
-```
 
 **Subfinder**
 ```bash
