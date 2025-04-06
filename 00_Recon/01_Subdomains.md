@@ -278,19 +278,30 @@ docker run gau tesla.com | tee -a gau.out
 
 # subdomains scraping
 docker run --rm sxcurity/gau:latest elcorteingles.es | unfurl -u domains | sort -u
-
-
 ```
+
+
+
 
 #### Exclude Dead Subdomains
 ```
 cat paypal-subdomain.txt | httpx -sc -cl --title -o paypalalive-subdomain.txt
 ```
 
+#### Subdomain Enumeration Using Subject Alternative Name (SAN)
+```bash
+target="api.paypal.com"
+true | openssl s_client -connect $target:443 2>/dev/null | openssl x509 -noout -text | grep "DNS" | tr ',' '\n'  | cut -d ":" -f2
+```
+TODO:
+- apply of each alive domains detected 
+
 
 **GoWitness**
 Actualizar con el framework de la database!
-
+```bash
+python3 EyeWitness.py -f paypal-alive-subdomain.txt --web --timeout 50 -d screenshots
+```
 
 
 

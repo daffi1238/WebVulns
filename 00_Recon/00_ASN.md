@@ -11,6 +11,8 @@ dig +short paypal.com
 
 curl -s https://api.bgpview.io/search?query_term=paypal | jq | tee -a bgpview.out
 
+curl -s -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64)" "https://bgp.he.net/search?search%5Bsearch%5D=tesla&commit=Search" |html2text
+
 curl -s "https://api.bgpview.io/ip/162.159.141.96" | jq | tee -a bgpview.out
 ```
 
@@ -28,6 +30,10 @@ amass intel -org "AKAMAI-AMS"
           23.1.106.0/24
           23.7.244.0/24
           23.40.100.0/24
+
+amass intel -asn 44384
+amass intel -whois -d paypal.com
+amass intel -whois -d paypal.com
 
 # nmap
 nmap --script targets-asn --script-args targets-asn.asn=26444

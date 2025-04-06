@@ -5,13 +5,27 @@ source ~/enum_venv/bin/activate
 mkdir -p ASN/{results,scripts,tmp}
 cd ASN
 
-ASN_name="ECI-AS"
+#ASN_name="ECI-AS"
+
+ASN_name="TESLA-1"
+name="tesla"
 main_web="elcorteingles.es"
+
 main_ip=$(dig +short $main_web)
+
 
 
 # BGPView búsqueda inicial
 curl -s "https://api.bgpview.io/search?query_term=$ASN_name" | jq | tee -a results/bgpview.out
+
+# bgptool.hurricane
+```bash
+curl -s -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64)" "https://bgp.he.net/search?search%5Bsearch%5D=$name&commit=Search" |html2text
+
+AS394943
+AS394363
+AS394161
+```
 
 # Suponiendo IP obtenida como ejemplo: 162.159.141.96
 curl -s "https://api.bgpview.io/ip/$main_ip" | jq | tee -a results/bgpview.out
@@ -19,12 +33,17 @@ curl -s "https://api.bgpview.io/ip/$main_ip" | jq | tee -a results/bgpview.out
 
 cat results/bgpview.out | jq | grep -E '"asn"|"name"' | awk -F: '{gsub(/[",]/, "", $2); print $2}' | paste - - | sort -u | tee ASN.txt
 
+manualmente añade los ASN's identificados con amass
+amass intel -org "$ASN_name"
+
 
 
 # Paso 2: Obtener rangos de IP con amass (modificar nombre de organización si cambia)
-cat ASN.txt | xargs -I {} amass intel -org "$ASN_name" | tee -a results/amass_org.out
+cat ASN.txt | xargs -I {} zsh -c "amass intel -asn {}"
+
 cat ASN.txt | awk '{print $1}' | xargs -I {} nmap --script targets-asn --script-args targets-asn.asn={} | tee -a results/nmap_asn.out
-cat ASN.txt | xargs -I {} zsh -c 'whois -h whois.radb.net -- '-i origin AS{}' | grep -Eo "([0-9.]+){4}/[0-9]+"' | tee -a results/whois.radb.out
+cat ASN.txt | xargs -I {} zsh -c 'whois -h whois.radb.net -- "-i origin AS{}" | grep -Eo "([0-9.]+){4}/[0-9]+"' | tee -a results/whois.radb.out
+
 
 # Obtener rangos de IP con whois para un ASN específico
 awk '{print $1}' ASN.txt | while read asn; do
