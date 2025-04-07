@@ -39,20 +39,20 @@ AS394943
 AS394363
 AS394161
 ```
-
+```
 # Suponiendo IP obtenida como ejemplo: 162.159.141.96
 curl -s "https://api.bgpview.io/ip/$main_ip" -A "$UserAgent" | jq | tee -a results/bgpview.out
 
-
+# formato de ASN.txt numer sin el "AS"
 cat results/bgpview.out | jq | grep -E '"asn"|"name"' | awk -F: '{gsub(/[",]/, "", $2); print $2}' | paste - - | sort -u | tee ASN.txt
 
 manualmente añade los ASN's identificados con amass
 amass intel -org "$ASN_name"
+```
 
-
-
+```
 # Paso 2: Obtener rangos de IP con amass (modificar nombre de organización si cambia)
-cat ASN.txt | xargs -I {} zsh -c "amass intel -asn {}"
+cat ASN.txt | xargs -I {} zsh -c "amass intel -asn {}" | tee results/amass_iprange.out
 
 cat ASN.txt | awk '{print $1}' | xargs -I {} nmap --script targets-asn --script-args targets-asn.asn={} | tee -a results/nmap_asn.out
 cat ASN.txt | xargs -I {} zsh -c 'whois -h whois.radb.net -- "-i origin AS{}" | grep -Eo "([0-9.]+){4}/[0-9]+"' | tee -a results/whois.radb.out
@@ -62,15 +62,18 @@ cat ASN.txt | xargs -I {} zsh -c 'whois -h whois.radb.net -- "-i origin AS{}" | 
 awk '{print $1}' ASN.txt | while read asn; do
     whois -h whois.radb.net -- "-i origin AS$asn" | grep -Eo '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+/[0-9]+'
 done | tee -a results/whois.radb.out
+```
 
 
-
+```
 # Extraer rangos por fichero:
 grep -HoP '\d{1,3}(\.\d{1,3}){3}/\d{1,2}|.*::.*' results/*.out | sed 's/[[:blank:]]//g' | sort -u | tee results/IPs_range.txt
-
+```
 # Extraer rangos IPv4 de la salida
+```
 cat results/*.out | grep -oP '\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/\d{1,2}' | sed 's/[[:blank:]]//g' | sort -u | tee results/IPsv4_range.txt
 cat results/*.out | grep -oP '.*::.*' | sed 's/[[:blank:]]//g' | sort -u | tee results/IPsv6_range.txt
+```
 
 ```python
 python3 -c "                    
@@ -89,20 +92,19 @@ for net in ip4 + ip6:
 " > results/IPs_range_merged.txt
 ```
 
-
+```
 # Escaneo de top 10 puertos en IPs
 nmap -sT -Pn -sV -T2 -n --top-ports=10 -iL results/IPs_range_merged.txt -oN results/Nmap_top10_ASN.nmap --open
+```
 
 
-
+```
 # Paso 3: Reverse IP lookup usando script personalizado
-wget -P scripts https://raw.githubusercontent.com/daffi1238/WebVulns/refs/heads/main/00_Recon/rapiddns.sh
+wget -P scripts https://raw.githubusercontent.com/daffi1238/WebVulns/refs/heads/main/00_Recon/scripts/rapiddns.sh
 bash scripts/rapiddns.sh results/IPs_range_merged.txt
+```
 
-
-
---> Por aqui voy
-
+```
 # Paso 4: Manual reverse DNS lookup con dnsvalidator
 git clone https://github.com/vortexau/dnsvalidator
 cd dnsvalidator
@@ -111,16 +113,22 @@ python3 setup.py install
 cd ..
 
 dnsvalidator -tL https://public-dns.info/nameservers.txt -threads 100 -o tmp/resolvers.txt
+```
 
+```
 # Obtener IPs desde rangos de ASNs
 cat tmp/IPs_whois.txt | xargs -I {} prips {} >> tmp/ips_asn.txt
+```
 
+```
 # Paso 5: Extraer dominios con dig manual
 while read ip; do dig -x $ip +short; done < tmp/ips_asn.txt >> results/reverse_manual_domains.txt
+```
 
+```
 # Consolidar dominios
 cat results/reverse_domains.txt results/reverse_manual_domains.txt | sort -u > results/all_domains.txt
-
+```
 # Obtener IPs de cada dominio
 cat results/all_domains.txt | xargs -I {} dig +short {} | grep -Eo "([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)" | sort -u > results/all_ips.txt
 
