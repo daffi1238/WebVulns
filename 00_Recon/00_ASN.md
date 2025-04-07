@@ -13,7 +13,7 @@ curl -s https://api.bgpview.io/search?query_term=paypal | jq | tee -a bgpview.ou
 
 curl -s -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64)" "https://bgp.he.net/search?search%5Bsearch%5D=tesla&commit=Search" |html2text
 
-curl -s "https://api.bgpview.io/ip/162.159.141.96" | jq | tee -a bgpview.out
+curl -s -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64)" "https://api.bgpview.io/ip/162.159.141.96" | jq | tee -a bgpview.out
 ```
 
 With the name of the AS use amass to identify the IP range used
