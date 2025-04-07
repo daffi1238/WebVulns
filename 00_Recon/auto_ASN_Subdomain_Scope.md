@@ -1,26 +1,39 @@
 # Entrar al entorno virtual
+```bash
 source ~/enum_venv/bin/activate
+```
 
-# Crear estructura de carpetas
+Crear estructura de carpetas
+```
 mkdir -p ASN/{results,scripts,tmp}
 cd ASN
+```
+Definimos variables
+```
+UserAgent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/37.0.2062.94 Chrome/37.0.2062.94 Safari/537.36"
 
-#ASN_name="ECI-AS"
+ASN_name="ECI-AS"
+name="el corte ingles"
+main_web="elcorteingles.es"
+main_ip=$(dig +short $main_web)
 
 ASN_name="TESLA-1"
 name="tesla"
-main_web="elcorteingles.es"
+main_web="tesla.com"
 
 main_ip=$(dig +short $main_web)
-
+```
 
 
 # BGPView búsqueda inicial
-curl -s "https://api.bgpview.io/search?query_term=$ASN_name" | jq | tee -a results/bgpview.out
+```
+curl -s -A "$UserAgent" "https://api.bgpview.io/search?query_term=$ASN_name" | jq | tee -a results/bgpview.out
+```
 
 # bgptool.hurricane
 ```bash
-curl -s -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64)" "https://bgp.he.net/search?search%5Bsearch%5D=$name&commit=Search" |html2text
+curl -s -A "$UserAgent" "https://bgp.he.net/search?search%5Bsearch%5D=$name&commit=Search" |html2text | tee results/bgp.he.out
+cat results/bgp.he.out
 
 AS394943
 AS394363
@@ -28,7 +41,7 @@ AS394161
 ```
 
 # Suponiendo IP obtenida como ejemplo: 162.159.141.96
-curl -s "https://api.bgpview.io/ip/$main_ip" | jq | tee -a results/bgpview.out
+curl -s "https://api.bgpview.io/ip/$main_ip" -A "$UserAgent" | jq | tee -a results/bgpview.out
 
 
 cat results/bgpview.out | jq | grep -E '"asn"|"name"' | awk -F: '{gsub(/[",]/, "", $2); print $2}' | paste - - | sort -u | tee ASN.txt
