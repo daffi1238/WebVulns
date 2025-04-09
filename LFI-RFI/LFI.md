@@ -34,6 +34,7 @@ rm wget-log*
 cat * | sort -u > LFI.txt
 
 wfuzz -hc=404 -t 5 -w LFI.txt https://test.com/path/?file=FUZZ
+wfuzz -c --hl 7 --hc 404 -w files/file_inclusion_linux.txt http://mountaineer.thm/wordpress/images..FUZZ
 ```
 
 # RFI

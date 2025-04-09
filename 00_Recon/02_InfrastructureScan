@@ -7,4 +7,9 @@ https://github.com/six2dez/pentest-book/blob/master/recon/host-scanning.md
 
 ```
 nmap -sT -Pn -n -T2 -iL ips.txt -oN allPorts.nmap
- ```
+
+# with parshell get each combination ip:port
+
+cat output.txt | grep tcp | awk ' {print $4,":",$3}' |
+tr -d ' ' | httpx -title -sc -cl
+```

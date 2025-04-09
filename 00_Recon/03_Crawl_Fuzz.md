@@ -29,7 +29,9 @@ rm raft-*
 wget https://raw.githubusercontent.com/OWASP/AppSec-Browser-Bundle/refs/heads/master/utilities/wfuzz/wordlist/fuzzdb/attack-payloads/http-protocol/http-protocol-methods.txt -O ~/wordlists/http-protocol-methods.txt
 ```
 
-# ffuf
+# Fuzzing endpoint
+
+### ffuf
 Varios targets
 ```bash
 # Several targets
@@ -46,6 +48,13 @@ Connection: close" > request.txt
 ffuf -request request.txt -w ~/wordlists/http-protocol-methods.txt:METHOD -w paths.txt:FUZZ -input-cmd "sed s/METHOD/{METHOD}/" -mc 200
 
 ```
+
+# Fuzzing parameters
+```bash
+wfuzz -c -t 20 -X POST --hc 404 -w /usr/share/wordlists/seclists/Discovery/Web-Content/raft-small-words.txt -d "FUZZ=http://127.0.0.1" "http://10.10.110.17:8080/view_image"
+wfuzz -c -t 20 --hw 67 -X GET --hc 404 -w /usr/share/wordlists/seclists/Discovery/Web-Content/raft-small-words.txt "http://10.10.110.17:8080/view_image?FUZZ=http://127.0.0.1"
+```
+
 
 # Endpoint with WebArchive
 ```
